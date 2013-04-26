@@ -1,0 +1,7 @@
+tr.current {
+    font-weight: bold;
+}
+
+tr.applied {
+    color: #888;
+}
