@@ -1,6 +1,6 @@
 <?php
 App::uses('MigrationsGuiAppController', 'MigrationsGui.Controller');
-App::uses('MigrationShell', 'Migrations.Console/Command');
+App::uses('MigrationGuiShell', 'MigrationsGui.Console/Command');
 App::uses('MigrationGuiConsoleOutput', 'MigrationsGui.Console');
 App::uses('ConsoleInput', 'Console');
 
@@ -21,7 +21,6 @@ class MigrationsGuiController extends MigrationsGuiAppController
             ksort($types);
             array_unshift($types, 'App');
         }
-        
         
         $Shell = $this->_getShell();
         $Shell->runCommand('init', array());
@@ -53,14 +52,53 @@ class MigrationsGuiController extends MigrationsGuiAppController
     
     public function command($command)
     {
-        $Shell = $this->_getShell();
+        $params = (array)$this->request->params['pass'];
+        $plugin = null;
         
-        $Shell->runCommand($command, (array)$this->request->params['pass']);
+        foreach ($params as $i=>$p) {
+            if ($p == '-p') {
+                unset($params[$i]);
+                if (isset($params[$i+1])) {
+                    $plugin = $params[$i+1];
+                    unset($params[$i+1]);
+                }
+                break;
+            }
+        }
         
-        $this->set('stdout', (string)$Shell->stdout);
-        $this->set('stderr', (string)$Shell->stderr);
+        if (isset($plugin)) {
+            $plugins = (array)$plugin;
+        } else {
+            $plugins = CakePlugin::loaded();
+            array_unshift($plugins, 'App');
+        }
         
-        $this->Session->setFlash('Migration Shell', 'MigrationsGui.console', array('stdout'=>(string)$Shell->stdout, 'stderr'=>(string)$Shell->stderr));
+        $stdout = $stderr = '';
+        
+        foreach ($plugins as $plugin) {
+            $Shell = $this->_createShell();
+        
+            if (strcasecmp($plugin, 'app') !== 0) {
+                $cparams = array_merge($params, array('-p', $plugin));
+            } else {
+                $cparams = $params;
+            }
+            
+            try {
+                $Shell->runCommand($command, $cparams);
+                $stdout .= (string)$Shell->stdout;
+                $stderr .= (string)$Shell->stderr;
+            } catch (MigrationGuiStopException $e) {
+                if ($e->getCode() != 1) {
+                    $Shell->err('Exception: ' . $e->getMessage());
+                    
+                    $stderr .= (string)$Shell->stdout;
+                    $stderr .= (string)$Shell->stderr;
+                }
+            }
+        }
+        
+        $this->Session->setFlash('Migration Shell', 'MigrationsGui.console', compact('stdout', 'stderr'));
         $this->redirect(array('action'=>'index'));
     }
     
@@ -69,13 +107,20 @@ class MigrationsGuiController extends MigrationsGuiAppController
         static $Shell = NULL;
         
         if (!isset($Shell)) {
-            $stdin  = new ConsoleInput('php://memory');
-            $stdout = new MigrationGuiConsoleOutput('php://memory');
-            $stderr = new MigrationGuiConsoleOutput('php://memory');
-            
-            $Shell = new MigrationShell($stdout, $stderr, $stdin);
-            $Shell->interactive = false;
+            $Shell = $this->_createShell();
         }
+        
+        return $Shell;
+    }
+    
+    protected function _createShell()
+    {
+        $stdin  = new ConsoleInput('php://memory');
+        $stdout = new MigrationGuiConsoleOutput('php://memory');
+        $stderr = new MigrationGuiConsoleOutput('php://memory');
+        
+        $Shell = new MigrationGuiShell($stdout, $stderr, $stdin);
+        $Shell->interactive = false;
         
         return $Shell;
     }

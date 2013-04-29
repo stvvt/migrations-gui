@@ -5,6 +5,11 @@ $runUrlTpl  = array('action'=>'command', 'run');
 $resetUrlTpl = array('action'=>'command', 'reset'); 
 ?>
 
+<div class="btn-group">
+    <?php echo $this->Html->link(__('Run All'), am($runUrlTpl, array('all')), array('class'=>'btn btn-primary', 'icon'=>'play')); ?>
+</div>
+
+
 <table class="table">
 <thead>
 <tr>
@@ -17,11 +22,8 @@ $resetUrlTpl = array('action'=>'command', 'reset');
 <?php foreach ($mappings as $plugin=>$pluginMapping) : ?>
 
 <?php
-if ($plugin != 'app') {
-    $prepend = array('-p', Inflector::humanize($plugin));
-} else {
-    $prepend = array();
-}
+$prepend = array('-p', Inflector::humanize($plugin));
+
 $runUrl  = array_merge($runUrlTpl, $prepend);
 $upUrl   = array_merge($runUrl, array('up')); 
 $downUrl = array_merge($runUrl, array('down')); 
