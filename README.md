@@ -6,7 +6,7 @@ A CakePHP 2.x plugin that makes it posible to review and apply schema migrations
 ## Intro
 
 Schema migration is always an important part of application development process. A great tool for automating this
-process is [CakeDC's Migration Plugin](https://github.com/CakeDC/migrations). Check its page if you need more 
+process is [CakeDC Migration Plugin](https://github.com/CakeDC/migrations). Check its page if you need more 
 information about schema migrations or how to use Migration Plugin from command line. However, a number of hosting 
 plans don't allow SSH nor any other access to command line. In this case you could use this plugin to review and apply 
 yours or teammates' generated schema migrations.
@@ -14,7 +14,9 @@ yours or teammates' generated schema migrations.
 ## Requirements
 
  * CakePHP 2.x
- * [CakeDC's Migration Plugin](https://github.com/CakeDC/migrations) installed
+ * [CakeDC Migration Plugin](https://github.com/CakeDC/migrations) v2.1 and above
+ * [TwitterBootstrap Plugin](https://github.com/slywalker/TwitterBootstrap) v1.5.5 and above - perhaps in the future this 
+   dependency will be made optional, but for now TwitterBootstrap plugin is required.
 
 ## Installing
 
