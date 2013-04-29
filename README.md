@@ -30,6 +30,8 @@ Install the plugin as usual, using one of well known methods for installing any 
 
    ```
    $ git submodule add git://github.com/stvvt/migrations-gui.git Plugin/MigrationsGui
+   $ git submodule init
+   ```
    
 Finally, enable the plugin by adding the following line in `app/config/bootstrap.php`:
 
