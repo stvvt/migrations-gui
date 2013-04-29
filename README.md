@@ -38,11 +38,11 @@ Install the plugin as usual, using one of well known methods for installing any 
 Finally, enable the plugin by adding the following line in `app/config/bootstrap.php`:
 
 ```
-CakePlugin::load('Migrations');
+CakePlugin::load('MigrationsGui');
 ```
 
 Don't forget that this plugin is simply a front end, thе tough work is still carried out by 
-[CakeDC's Migration Plugin](https://github.com/CakeDC/migrations), so it MUST be installed prior to use.
+[CakeDC Migration Plugin](https://github.com/CakeDC/migrations), so it MUST be installed prior to use.
 
 ## Usage
 
