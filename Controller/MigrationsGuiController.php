@@ -29,13 +29,24 @@ class MigrationsGuiController extends MigrationsGuiAppController
         
         $errors = array();
         $mappings = array();
+        $showAll  = !empty($this->request->params['named']['all']);
         
         foreach ($types as $type) {
             $type = Inflector::underscore($type);
             try {
                 $mapping = $Version->getMapping($type);
                 
+                if (!$showAll) {
+                    // Remove already applied migrations
+                    foreach ((array)$mapping as $i=>$m) {
+                        if (!empty($m['migrated'])) {
+                            unset($mapping[$i]);
+                        } 
+                    }
+                }
+                
                 if (empty($mapping)) {
+                    // No migrations
                     continue;
                 }
                 

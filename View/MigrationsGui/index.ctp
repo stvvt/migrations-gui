@@ -2,13 +2,35 @@
 
 <?php
 $runUrlTpl  = array('action'=>'command', 'run'); 
-$resetUrlTpl = array('action'=>'command', 'reset'); 
+$resetUrlTpl = array('action'=>'command', 'reset');
+$_showAll    = !empty($this->request->params['named']['all']);
 ?>
 
+<div class="btn-toolbar">
 <div class="btn-group">
     <?php echo $this->Html->link(__('Run All'), am($runUrlTpl, array('all')), array('class'=>'btn btn-primary', 'icon'=>'play')); ?>
+    <?php
+        if ($_showAll) {
+            echo $this->Html->link(__('Pending'), array('all'=>false), array('class'=>'btn btn-success', 'icon'=>'list'));
+        } else { 
+            echo $this->Html->link(__('All'), array('all'=>true), array('class'=>'btn btn-success', 'icon'=>'list'));
+        } 
+    ?>
+    <?php  ?>
+</div>
 </div>
 
+<?php
+if (empty($mappings)) {
+    if ($_showAll) {
+        echo $this->element('TwitterBootstrap.alert', array('message' => __('There are no migrations.')));
+    } else {
+        echo $this->element('TwitterBootstrap.alert', array('message' => __('There are no pending migrations.'), 'class'=>' alert-success'));
+    }
+    
+    return;
+} 
+?>
 
 <table class="table">
 <thead>
@@ -43,8 +65,9 @@ $resetUrl = array_merge($resetUrlTpl, $prepend);
             </div>
         </th>
     </tr>
+    <?php echo $this->end(); ?>
     <?php $i = count($pluginMapping); $_isCurrent = null; ?>
-    <?php foreach ($pluginMapping as $m) : ?>
+    <?php foreach ($pluginMapping as $j=>$m) : ?>
     <?php
         $_isApplied = !empty($m['migrated']);
         
