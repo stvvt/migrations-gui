@@ -23,9 +23,9 @@ $_showAll    = !empty($this->request->params['named']['all']);
 <?php
 if (empty($mappings)) {
     if ($_showAll) {
-        echo $this->element('TwitterBootstrap.alert', array('message' => __('There are no migrations.')));
+        echo $this->MigrationsGui->alert(__('There are no migrations.'));
     } else {
-        echo $this->element('TwitterBootstrap.alert', array('message' => __('There are no pending migrations.'), 'class'=>' alert-success'));
+        echo $this->MigrationsGui->alert(__('There are no pending migrations.'), array('class'=>' alert-success'));
     }
     
     return;
@@ -58,10 +58,10 @@ $resetUrl = array_merge($resetUrlTpl, $prepend);
         <th colspan="4">
             <?php echo Inflector::humanize($plugin); ?>
             <div class="btn-group">
-                <?php echo $this->Html->link('', $runAllUrl, array('title'=>__('Migrate All'), 'class'=>'btn btn-mini', 'icon'=>'play'))?>
-                <?php echo $this->Html->link('', $downUrl, array('title'=>__('Migrate Down'), 'class'=>'btn btn-mini', 'icon'=>'step-backward'))?>
-                <?php echo $this->Html->link('', $upUrl, array('title'=>__('Migrate Up'), 'class'=>'btn btn-mini', 'icon'=>'step-forward'))?>
-                <?php echo $this->Html->link('', $resetUrl, array('title'=>__('Reset'), 'class'=>'btn btn-mini', 'icon'=>'remove'))?>
+                <?php echo $this->Html->link(__('All'), $runAllUrl, array('title'=>__('Migrate All'), 'class'=>'btn btn-mini', 'icon'=>'play'))?>
+                <?php echo $this->Html->link(__('Down'), $downUrl, array('title'=>__('Migrate Down'), 'class'=>'btn btn-mini', 'icon'=>'step-backward'))?>
+                <?php echo $this->Html->link(__('Up'), $upUrl, array('title'=>__('Migrate Up'), 'class'=>'btn btn-mini', 'icon'=>'step-forward'))?>
+                <?php echo $this->Html->link(__('Reset'), $resetUrl, array('title'=>__('Reset'), 'class'=>'btn btn-mini', 'icon'=>'remove'))?>
             </div>
         </th>
     </tr>
@@ -93,7 +93,7 @@ $resetUrl = array_merge($resetUrlTpl, $prepend);
         <td>
             <?php echo $i--; ?>.
             <?php if ($_isApplied) {
-                echo $this->Html->icon('ok');
+                echo $this->MigrationsGui->icon('ok');
             }?>
         </td>
         <td>
