@@ -15,8 +15,7 @@ yours or teammates' generated schema migrations.
 
  * CakePHP 2.x
  * [CakeDC Migration Plugin](https://github.com/CakeDC/migrations) v2.1 and above
- * [TwitterBootstrap Plugin](https://github.com/slywalker/TwitterBootstrap) v1.5.5 and above - perhaps in the future this 
-   dependency will be made optional, but for now TwitterBootstrap plugin is required.
+ * (optional) [TwitterBootstrap Plugin](https://github.com/slywalker/TwitterBootstrap) v1.5.5 and above - for better outlook out of the box.
 
 ## Installing
 
