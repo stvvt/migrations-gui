@@ -12,7 +12,7 @@ class MigrationsGuiController extends MigrationsGuiAppController
 {
     public $components = array('Session');
     
-    public function index($type = null)
+    public function admin_index($type = null)
     {
         if (isset($type)) {
             $types = (array)$type;
@@ -61,7 +61,7 @@ class MigrationsGuiController extends MigrationsGuiAppController
         $this->set(compact('mappings', 'errors'));
     }
     
-    public function command($command)
+    public function admin_command($command)
     {
         $params = (array)$this->request->params['pass'];
         $plugin = null;
@@ -96,7 +96,7 @@ class MigrationsGuiController extends MigrationsGuiAppController
             }
             
             try {
-                $Shell->runCommand($command, $cparams);
+                @$Shell->runCommand($command, $cparams);
                 $stdout .= (string)$Shell->stdout;
                 $stderr .= (string)$Shell->stderr;
             } catch (MigrationGuiStopException $e) {
@@ -113,12 +113,21 @@ class MigrationsGuiController extends MigrationsGuiAppController
         $this->redirect(array('action'=>'index'));
     }
     
+    public function admin_clear($version, $type, $migrated = false)
+    {
+        $Shell = $this->_getShell();
+        $Shell->Version->setVersion($version, $type, $migrated);
+        
+        $this->redirect($this->referer());
+    }
+    
     protected function _getShell()
     {
         static $Shell = NULL;
         
         if (!isset($Shell)) {
             $Shell = $this->_createShell();
+            $Shell->startup();
         }
         
         return $Shell;
@@ -132,6 +141,11 @@ class MigrationsGuiController extends MigrationsGuiAppController
         
         $Shell = new MigrationGuiShell($stdout, $stderr, $stdin);
         $Shell->interactive = false;
+        
+        $Shell->params = array(
+            'no-auto-init' => false,
+            'precheck'     => true,
+        );
         
         return $Shell;
     }
